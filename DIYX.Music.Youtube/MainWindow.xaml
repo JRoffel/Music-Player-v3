@@ -5,8 +5,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DIYX.Music.Youtube"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
-    <Grid>
-        
+        Title="MainWindow" Height="350" Width="525" MouseWheel="Grid_MouseWheel" Background="Black">
+    <Grid HorizontalAlignment="Left" Width="517">
+        <Button Name="btnOpenAudioFile" Click="btnOpenAudioFile_Click" Margin="217,75,221,208">Open File</Button>
+        <Label Name="lblStatus" Content="Not Playing..." HorizontalAlignment="Center" Margin="217,21,221,249" Foreground="Red"></Label>
+        <Button x:Name="btnPlay" Click="btnPlay_Click" Content="Play" Margin="133,189,305,94"/>
+        <Button x:Name="btnPause" Margin="217,189,221,94" Click="btnPause_Click" Content="Pause"/>
+        <Button x:Name="btnStop" Click="btnStop_Click" Content="Stop" Margin="301,189,137,94"/>
+        <Slider Name="sldrProgress" Margin="50,244,50,44" Thumb.DragStarted="sldrProgress_DragStarted" Thumb.DragCompleted="sldrProgress_DragCompleted"></Slider>
+        <ProgressBar Name="sldrVolume" HorizontalAlignment="Left" Margin="395,292,0,0" VerticalAlignment="Top" Width="112" Maximum="1" Height="17"/>
     </Grid>
 </Window>

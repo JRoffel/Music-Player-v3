@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace DIYX.Music.Youtube
 {
@@ -20,9 +22,77 @@ namespace DIYX.Music.Youtube
     /// </summary>
     public partial class MainWindow : Window
     {
+        private MediaPlayer mediaPlayer = new MediaPlayer();
+        private bool shouldUpdateSlider = true;
+
         public MainWindow()
         {
             InitializeComponent();
+            sldrVolume.Value = mediaPlayer.Volume;
+        }
+
+        private void btnOpenAudioFile_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Music files (*.mp3, *.wav)|*.mp3;*.wav|All files (*.*)|*.*";
+
+            if(openFileDialog.ShowDialog() == true)
+            {
+                mediaPlayer.Open(new Uri(openFileDialog.FileName));
+            }
+
+            DispatcherTimer timer = new DispatcherTimer();
+            timer.Interval = TimeSpan.FromSeconds(1);
+            timer.Tick += timer_Tick;
+            timer.Start();
+        }
+
+        private void btnPlay_Click(object sender, RoutedEventArgs e)
+        {
+            mediaPlayer.Play();
+        }
+
+        private void btnPause_Click(object sender, RoutedEventArgs e)
+        {
+            mediaPlayer.Pause();
+        }
+
+        private void btnStop_Click(object sender, RoutedEventArgs e)
+        {
+            mediaPlayer.Stop();
+        }
+
+        void timer_Tick(object sender, EventArgs e)
+        {
+            if (shouldUpdateSlider == true)
+            {
+                if (mediaPlayer.Source != null)
+                {
+                    lblStatus.Content = String.Format("{0} / {1}", mediaPlayer.Position.ToString(@"mm\:ss"), mediaPlayer.NaturalDuration.TimeSpan.ToString(@"mm\:ss"));
+                    lblStatus.Foreground = new SolidColorBrush(Colors.White);
+                }
+                else
+                {
+                    lblStatus.Content = "Not Playing...";
+                    lblStatus.Foreground = new SolidColorBrush(Colors.Red);
+                }
+            }
+        }
+
+        private void Grid_MouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            mediaPlayer.Volume += (e.Delta > 0) ? 0.05 : -0.05;
+            sldrVolume.Value = mediaPlayer.Volume;
+        }
+
+        private void sldrProgress_DragStarted(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void sldrProgress_DragCompleted(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }
