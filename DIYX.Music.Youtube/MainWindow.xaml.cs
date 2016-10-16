@@ -22,8 +22,10 @@ namespace DIYX.Music.Youtube
     /// </summary>
     public partial class MainWindow : Window
     {
+        MainController mainController = new MainController();
         private MediaPlayer mediaPlayer = new MediaPlayer();
         private bool shouldUpdateSlider = true;
+        private string youtubeUrl;
 
         public MainWindow()
         {
@@ -66,10 +68,13 @@ namespace DIYX.Music.Youtube
         {
             if (shouldUpdateSlider == true)
             {
-                if (mediaPlayer.Source != null)
+                if ((mediaPlayer.Source != null) && (mediaPlayer.NaturalDuration.HasTimeSpan))
                 {
                     lblStatus.Content = String.Format("{0} / {1}", mediaPlayer.Position.ToString(@"mm\:ss"), mediaPlayer.NaturalDuration.TimeSpan.ToString(@"mm\:ss"));
                     lblStatus.Foreground = new SolidColorBrush(Colors.White);
+                    sldrProgress.Minimum = 0;
+                    sldrProgress.Maximum = mediaPlayer.NaturalDuration.TimeSpan.TotalSeconds;
+                    sldrProgress.Value = mediaPlayer.Position.TotalSeconds;
                 }
                 else
                 {
@@ -87,12 +92,24 @@ namespace DIYX.Music.Youtube
 
         private void sldrProgress_DragStarted(object sender, RoutedEventArgs e)
         {
-
+            shouldUpdateSlider = false;
         }
 
         private void sldrProgress_DragCompleted(object sender, RoutedEventArgs e)
         {
+            shouldUpdateSlider = true;
+            mediaPlayer.Position = TimeSpan.FromSeconds(sldrProgress.Value);
+        }
 
+        private void btnOpenYoutubeDialog_Click(object sender, RoutedEventArgs e)
+        {
+            YoutubeDialog youtubeDialog = new YoutubeDialog();
+
+            if(youtubeDialog.ShowDialog() == true)
+            {
+                youtubeUrl = youtubeDialog.ResponseText;
+                mainController.DownloadYoutubeAudio(youtubeUrl);
+            }
         }
     }
 }

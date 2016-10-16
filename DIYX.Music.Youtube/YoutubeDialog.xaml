@@ -1,0 +1,13 @@
+﻿<Window x:Class="DIYX.Music.Youtube.YoutubeDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:DIYX.Music.Youtube"
+        mc:Ignorable="d"
+        Title="YoutubeDialog" Height="254.569" Width="556.919" Background="Black">
+    <Grid>
+        <TextBox x:Name="boxYoutubeUrl" AcceptsReturn="False" AcceptsTab="False" Margin="110,27,123,167"></TextBox>
+        <Button x:Name="btnYoutubeConfirm" Click="btnYoutubeConfirm_Click" Margin="205,106,214,81">Use this link!</Button>
+    </Grid>
+</Window>
